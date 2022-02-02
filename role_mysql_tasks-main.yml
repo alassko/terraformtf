@@ -1,0 +1,22 @@
+# tasks file for mysql
+- name: Install mysql
+  yum: name={{ db_package }} state=present
+
+- name: STart mysql Daemon
+  service: name={{ db_daemon }} state=started
+- name: Create Database
+  mysql_db:
+      name: "{{ db_name }}"
+      state: present
+- name: Create db user
+  mysql_user:
+      name: "{{ db_user }}"
+      password: "{{db_user_password }}"
+      priv: '*.*:ALL'
+      state: present
+
+- name: Copy the my.cnf
+  copy:
+      src: /etc/ansible/my.cnf
+      dest: /root/.my.cnf
+      remote_src: no
